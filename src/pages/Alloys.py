@@ -1,5 +1,7 @@
 import streamlit as st
 
+from utils import header
+
 # --- FUNCTIONS --- #
 
 
@@ -66,14 +68,12 @@ def generate_input_rows(n=4):
 
 
 # ----------------- #
-
-st.title("Alloys")
-st.write(
-    "Welcome to the Alloys page. Here you can calculate the weight of the alloy needed to be added to the raw gold to achieve the desired purity."
+header(
+    name="Alloys",
+    desc="Welcome to the Alloys page. Here you can calculate the weight of the alloy needed to be added to the raw gold to achieve the desired purity.",
 )
-
-weights = []
-purities = []
+with st.sidebar:
+    st.caption("© 2023 Sahil Pattni. All rights reserved.")
 
 desired_purity: float = st.number_input(
     label="Desired Purity [0 - 1000]",
@@ -84,38 +84,35 @@ desired_purity: float = st.number_input(
     help="The purity of the alloy in perthousands.",
 )
 
+# Generate input rows
 st.subheader("Input Gold")
-generate_input_rows(n=4)
-
-container = st.container()
+weights = []
+purities = []
+generate_input_rows(n=3)
 
 
 if desired_purity:
-    with container:
-        try:
-            raw_purity, alloy_weight, new_weight = calculate_alloy_weight(
-                weights, purities, desired_purity
-            )
+    try:
+        raw_purity, alloy_weight, new_weight = calculate_alloy_weight(
+            weights, purities, desired_purity
+        )
 
-            # st.subheader("Results")
-            st.divider()
+        # st.subheader("Results")
+        st.divider()
 
-            col1, col2 = st.columns(2)
+        col1, col2, col3 = st.columns(3)
 
-            with col1:
-                st.metric("Raw Gold (Gross)", f"{sum(weights):.3f} g")
-                st.metric("Pure Gold", f"{raw_purity:.3f} g")
-                st.metric("Input Purity", f"{raw_purity / sum(weights):.3f}")
-            with col2:
-                st.metric("Alloy to Add", f"{alloy_weight:.3f} g")
-                st.metric("New Weight (Gross)", f"{new_weight:.3f} g")
+        with col1:
+            st.metric("Raw Gold (Gross)", f"{sum(weights):.3f} g")
+            st.metric("Pure Gold", f"{raw_purity:.3f} g")
+        with col2:
+            st.metric("Alloy to Add", f"{alloy_weight:.3f} g")
+            st.metric("New Weight (Gross)", f"{new_weight:.3f} g")
+        with col3:
+            st.metric("Input Purity", f"{raw_purity / sum(weights):.3f}")
 
-            st.caption("© 2023 Sahil Pattni. All rights reserved.")
-
-        except ZeroDivisionError:
-            st.caption("© 2023 Sahil Pattni. All rights reserved.")
-            st.stop()
-        except Exception as err:
-            st.error(f"Error: {err}")
-            st.caption("© 2023 Sahil Pattni. All rights reserved.")
-            st.stop()
+    except ZeroDivisionError:
+        st.stop()
+    except Exception as err:
+        st.error(f"Error: {err}")
+        st.stop()
