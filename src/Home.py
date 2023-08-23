@@ -34,6 +34,7 @@ st.subheader(
 
 with st.sidebar:
     st.caption("© 2023 Sahil Pattni. All rights reserved.")
+    st.caption(f"Streamlit version: {st.__version__}")
 
 st.divider()
 
