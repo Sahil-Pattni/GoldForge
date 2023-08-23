@@ -34,33 +34,36 @@ st.subheader(
 
 with st.sidebar:
     st.caption("© 2023 Sahil Pattni. All rights reserved.")
-    st.caption(f"Streamlit version: {st.__version__}")
-    with open("requirements.txt") as f:
-        st.caption(f"Requirements: {f.read()}")
+    if st.checkbox("Debug"):
+        st.caption(f"Streamlit version: {st.__version__}")
+        with open("requirements.txt") as f:
+            st.caption(f"Requirements: {f.read()}")
 
 st.divider()
 
 
 am_price, pm_price, date = london_fix()
 
-st.header("London Fix")
+st.header("London Fix Gold Price")
 st.caption(f"Last updated: {date}")
 col1, col2 = st.columns(2)
 with col1:
+    st.subheader("AM")
     st.metric(
-        "Gold Price (AM)",
+        "Gold Price ($/oz)",
         f"${am_price:,.2f}",
     )
     st.metric(
-        "Gold Price (AM)",
-        f"{am_price * 3.67:,.2f} AED",
+        "Gold Price (AED / kg)",
+        f"{(am_price/31.1035) * 1000 * 3.67:,.0f} AED",
     )
 with col2:
+    st.subheader("PM")
     st.metric(
-        "Gold Price (PM)",
+        "Gold Price ($/oz)",
         f"${pm_price:,.2f}",
     )
     st.metric(
-        "Gold Price (PM)",
-        f"{pm_price * 3.67:,.2f} AED",
+        "Gold Price (AED / kg)",
+        f"{(pm_price/31.1035) * 1000 * 3.67:,.0f} AED",
     )
